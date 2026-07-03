@@ -32,9 +32,8 @@
   }
   td.other{background:#fafafa; color:#c7cbd1;}
   .date{font-weight:700; font-size:14px; margin-bottom:4px;}
-  .date.sun{color:#d43a3a;} .date.sat{color:var(--blue);}
   .date.holiday{color:#d43a3a;}
-  .holiday-name{font-size:9.5px; color:#d43a3a; font-weight:700; margin:-2px 0 4px; line-height:1.2;}
+  .holiday-name{font-size:9.5px; color:#d43a3a; font-weight:700; margin:-2px 0 4px; line-height:1.2; min-height:12px; white-space:nowrap;}
   .badge{
     display:flex; align-items:center; gap:4px; flex-wrap:wrap;
     color:#fff; font-weight:700; font-size:12px; border-radius:5px;
@@ -179,7 +178,7 @@ function getHolidayName(y, m0, d){ // m0 is 0-indexed month
   if(y === 2026 && HOLIDAYS_2026[key2026]) return HOLIDAYS_2026[key2026];
   const fkey = `${m}-${d}`;
   if(FIXED_HOLIDAYS[fkey]) return FIXED_HOLIDAYS[fkey];
-  if(m === 10 && d === fourthFridayOfOctober(y)) return "노조창립기념일";
+  if(m === 10 && d === fourthFridayOfOctober(y)) return "노조기념일";
   return null;
 }
 
@@ -246,16 +245,19 @@ function render(){
 
       const dateDiv = document.createElement("div");
       const holidayName = getHolidayName(cell.y, cell.m, cell.d);
-      dateDiv.className = "date" + (c===5?" sat":"") + (c===6?" sun":"") + (holidayName?" holiday":"");
+      dateDiv.className = "date" + (holidayName?" holiday":"");
       dateDiv.textContent = cell.d;
       td.appendChild(dateDiv);
 
+      const hName = document.createElement("div");
+      hName.className = "holiday-name";
       if(holidayName){
-        const hName = document.createElement("div");
-        hName.className = "holiday-name";
         hName.textContent = holidayName;
-        td.appendChild(hName);
+      } else {
+        hName.textContent = "\u00A0";
+        hName.style.visibility = "hidden";
       }
+      td.appendChild(hName);
 
       const teams = teamsFor(cell.y, cell.m, cell.d);
       teams.forEach((team, slot) => {
