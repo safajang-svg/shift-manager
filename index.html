@@ -204,7 +204,8 @@ function teamsFor(y,m,d){
 }
 
 // ---------- state ----------
-let viewYear = 2026, viewMonth = 6; // 0-indexed month, July = 6
+const today = new Date();
+let viewYear = today.getFullYear(), viewMonth = today.getMonth(); // 0-indexed month
 // key: "y-m-d-slot" -> array of {id, type:'vacation', name, vtype} or {id, type:'swap', from, to}
 const entries = {};
 
